@@ -1,0 +1,119 @@
+<div class="container ticket-wrapper fade-in-up">
+
+  <div class="success-header" *ngIf="booking">
+    <div class="success-icon">✓</div>
+    <h1>Booking Confirmed!</h1>
+    <p>Your e-ticket has been generated. Have a safe journey!</p>
+  </div>
+
+  <div class="ticket" *ngIf="booking && train">
+
+    <!-- Ticket Header -->
+    <div class="ticket-header" [style.backgroundImage]="'url(' + train.image + ')'">
+      <div class="ticket-header-overlay">
+        <div class="ticket-logo">Rail<span>X</span></div>
+        <div class="ticket-badge">BOARDING PASS</div>
+      </div>
+    </div>
+
+    <!-- Route Row -->
+    <div class="ticket-route">
+      <div class="ticket-city">
+        <div class="city-code">{{ train.from.substring(0,3).toUpperCase() }}</div>
+        <div class="city-name">{{ train.from }}</div>
+        <div class="dep-time">10:00 AM</div>
+      </div>
+      <div class="ticket-route-mid">
+        <div class="route-line">
+          <div class="route-dot"></div>
+          <div class="route-dash"></div>
+          <div class="train-icon">🚄</div>
+          <div class="route-dash"></div>
+          <div class="route-dot"></div>
+        </div>
+        <div class="route-duration">8h 30m</div>
+        <div class="train-name-small">{{ train.name }}</div>
+      </div>
+      <div class="ticket-city right">
+        <div class="city-code">{{ train.to.substring(0,3).toUpperCase() }}</div>
+        <div class="city-name">{{ train.to }}</div>
+        <div class="dep-time">06:30 PM</div>
+      </div>
+    </div>
+
+    <!-- Tear line -->
+    <div class="tear-line">
+      <div class="tear-notch left"></div>
+      <div class="tear-dots"></div>
+      <div class="tear-notch right"></div>
+    </div>
+
+    <!-- Ticket Body -->
+    <div class="ticket-body">
+      <div class="passenger-section">
+        <h3>Passenger Details</h3>
+        <table class="passenger-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Gender</th>
+              <th>Seat</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of booking.passengers; let i = index">
+              <td class="row-num">{{ i+1 }}</td>
+              <td><strong>{{ p.name }}</strong></td>
+              <td>{{ p.age }}</td>
+              <td>{{ p.gender }}</td>
+              <td><span class="seat-chip">{{ booking.seats[i] }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ticket-footer-row">
+        <div class="qr-section">
+          <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=RailX-' + booking.trainId + '-' + booking.seats.join(',') + '&bgcolor=111520&color=f5a623&format=svg'" alt="QR Code">
+          <div class="qr-label">Scan at Gate</div>
+        </div>
+        <div class="ticket-meta">
+          <div class="meta-row">
+            <span class="meta-label">PNR</span>
+            <span class="meta-val pnr">{{ pnr }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">Train ID</span>
+            <span class="meta-val">{{ train.id }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">Class</span>
+            <span class="meta-val">Sleeper (SL)</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">Status</span>
+            <span class="meta-val confirmed">✓ CONFIRMED</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Actions -->
+  <div class="ticket-actions" *ngIf="booking">
+    <button routerLink="/my-bookings" class="btn-accent">📋 My Bookings</button>
+    <button routerLink="/" class="btn-primary">🚄 Book Another</button>
+  </div>
+
+  <!-- No booking state -->
+  <div class="card text-center no-ticket" *ngIf="!booking">
+    <div style="font-size:3rem;margin-bottom:1rem">🎫</div>
+    <h2>No Ticket Found</h2>
+    <p>Please complete a booking first to view your boarding pass.</p>
+    <button routerLink="/trains" class="btn-primary" style="margin-top:1.2rem">View Trains</button>
+  </div>
+
+</div>

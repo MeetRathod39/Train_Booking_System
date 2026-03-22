@@ -1,0 +1,76 @@
+<div class="container my-bookings-container fade-in-up">
+
+  <div class="page-top">
+    <div>
+      <div class="section-label">Account</div>
+      <h2 class="page-title">My Bookings</h2>
+    </div>
+    <div class="bookings-count" *ngIf="displayBookings.length > 0">
+      {{ displayBookings.length }} booking{{ displayBookings.length > 1 ? 's' : '' }}
+    </div>
+  </div>
+
+  <div class="booking-grid" *ngIf="displayBookings.length > 0">
+    <div class="booking-card" *ngFor="let item of displayBookings; let i = index">
+
+      <!-- Header with train image -->
+      <div class="booking-img" [style.backgroundImage]="item.train?.image ? 'url(' + item.train.image + ')' : 'none'">
+        <div class="booking-img-overlay">
+          <span class="train-name">{{ item.train?.name }}</span>
+          <span class="status-badge">✓ Confirmed</span>
+        </div>
+      </div>
+
+      <div class="booking-body">
+        <!-- Route -->
+        <div class="booking-route">
+          <div class="route-city">
+            <div class="r-code">{{ item.train?.from?.substring(0,3)?.toUpperCase() }}</div>
+            <div class="r-name">{{ item.train?.from }}</div>
+          </div>
+          <div class="route-arrow">→</div>
+          <div class="route-city right">
+            <div class="r-code">{{ item.train?.to?.substring(0,3)?.toUpperCase() }}</div>
+            <div class="r-name">{{ item.train?.to }}</div>
+          </div>
+        </div>
+
+        <!-- Info grid -->
+        <div class="booking-info-grid">
+          <div class="info-item">
+            <span class="info-label">Passengers</span>
+            <span class="info-val">{{ item.passengers ? item.passengers.length : 0 }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Seats</span>
+            <span class="info-val accent">{{ item.seats.join(', ') }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Train ID</span>
+            <span class="info-val mono">#{{ item.trainId }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Price</span>
+            <span class="info-val accent">₹{{ item.train?.price ? (item.train.price * item.seats.length) : '—' }}</span>
+          </div>
+        </div>
+
+        <div class="booking-actions">
+          <button (click)="deleteBooking(i)" class="delete-btn">Cancel Booking</button>
+          <button routerLink="/ticket" class="view-btn">View Ticket</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="displayBookings.length === 0">
+    <div class="empty-img">🎫</div>
+    <h3>No bookings yet</h3>
+    <p>You haven't booked any tickets. Start your next journey now!</p>
+    <a routerLink="/trains" class="btn-primary" style="text-decoration:none;display:inline-flex;margin-top:1.2rem">
+      Explore Trains →
+    </a>
+  </div>
+
+</div>

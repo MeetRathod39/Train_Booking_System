@@ -1,0 +1,89 @@
+<div class="page-header" style="background-image: url('https://images.unsplash.com/photo-1532155283451-d4f10a76f2cd?q=80&w=2070&auto=format&fit=crop');">
+  <div class="header-overlay">
+    <div class="container text-center">
+      <h1 class="fade-in-up">Find Your Train</h1>
+      <p class="fade-in-up delay-100">Search across India's premium rail network</p>
+    </div>
+  </div>
+</div>
+
+<div class="container train-list-container fade-in-up delay-200">
+
+  <div class="card search-panel">
+    <h2 class="panel-title">Search Trains</h2>
+    <div class="search-form">
+      <div class="form-group">
+        <label>From Station</label>
+        <input type="text" [(ngModel)]="from" class="form-input" placeholder="e.g. Delhi">
+      </div>
+      <div class="form-group">
+        <label>To Station</label>
+        <input type="text" [(ngModel)]="to" class="form-input" placeholder="e.g. Mumbai">
+      </div>
+      <div class="form-group">
+        <label>Travel Date</label>
+        <input type="date" [(ngModel)]="date" class="form-input" [min]="today">
+      </div>
+      <button (click)="search()" class="btn-primary" style="margin-top:24px">Find Trains →</button>
+    </div>
+  </div>
+
+  <div class="results-header">
+    <h2>Available Trains <span class="count-badge">{{ filteredTrains.length }}</span></h2>
+  </div>
+
+  <div class="trains-grid" *ngIf="filteredTrains.length > 0">
+    <div class="card train-card" *ngFor="let train of filteredTrains">
+
+      <div class="train-image-header" [style.backgroundImage]="'url(' + train.image + ')'">
+        <div class="train-image-overlay">
+          <div class="train-title">
+            <h3>{{ train.name }}</h3>
+            <span class="train-id">#{{ train.id }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="route-details">
+          <div class="station">
+            <span class="time">{{ train.dep }}</span>
+            <span class="city">{{ train.from }}</span>
+          </div>
+          <div class="journey-line">
+            <div class="dot"></div>
+            <div class="line"></div>
+            <div class="duration">{{ train.duration }}</div>
+            <div class="line"></div>
+            <div class="dot"></div>
+          </div>
+          <div class="station text-right">
+            <span class="time">{{ train.arr }}</span>
+            <span class="city">{{ train.to }}</span>
+          </div>
+        </div>
+        <div class="train-tags">
+          <span class="tag tag-ac">AC Available</span>
+          <span class="tag tag-fast">Superfast</span>
+        </div>
+      </div>
+
+      <div class="train-footer">
+        <div class="price-info">
+          <span class="price-label">Starting from</span>
+          <span class="price">₹{{ train.price }}</span>
+        </div>
+        <button [routerLink]="['/booking', train.id]" class="btn-primary">Select Seats →</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card empty-state" *ngIf="filteredTrains.length === 0">
+    <div class="empty-icon">🔍</div>
+    <h3>No trains found</h3>
+    <p>Try adjusting your search criteria to discover more routes.</p>
+    <button (click)="from=''; to=''; search()" class="btn-primary" style="margin-top:1.2rem">Clear Search</button>
+  </div>
+
+</div>

@@ -1,0 +1,172 @@
+<div class="page-header" style="background-image: url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=2070&auto=format&fit=crop');">
+  <div class="header-overlay">
+    <div class="container text-center">
+      <h1 class="fade-in-up">Secure Payment</h1>
+      <p class="fade-in-up delay-100">Complete your booking with our encrypted gateway</p>
+    </div>
+  </div>
+</div>
+
+<div class="container payment-container fade-in-up delay-200" *ngIf="booking && train">
+
+  <!-- Left: Summary -->
+  <div class="card summary-card">
+    <h2 class="card-title">Booking Summary</h2>
+
+    <div class="train-banner" [style.backgroundImage]="'url(' + train.image + ')'">
+      <div class="banner-overlay">
+        <div class="banner-name">{{ train.name }}</div>
+        <div class="banner-route">{{ train.from }} → {{ train.to }}</div>
+      </div>
+    </div>
+
+    <div class="summary-rows">
+      <div class="summary-row">
+        <span class="s-label">Train</span>
+        <span class="s-value"><strong>{{ train.name }}</strong></span>
+      </div>
+      <div class="summary-row">
+        <span class="s-label">Route</span>
+        <span class="s-value">{{ train.from }} → {{ train.to }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="s-label">Passengers</span>
+        <span class="s-value">{{ booking.passengers.length }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="s-label">Seats</span>
+        <span class="s-value accent-text">{{ booking.seats.join(', ') }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="s-label">Base Fare</span>
+        <span class="s-value">₹{{ train.price }} × {{ booking.seats.length }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="s-label">Service Fee</span>
+        <span class="s-value">₹{{ serviceFee }}</span>
+      </div>
+    </div>
+
+    <div class="total-bar">
+      <span>Total Amount</span>
+      <span class="total-amount">₹{{ totalAmount }}</span>
+    </div>
+
+    <div class="security-badges">
+      <div class="badge-item">🔒 SSL Encrypted</div>
+      <div class="badge-item">✅ PCI Compliant</div>
+      <div class="badge-item">🛡️ Fraud Protected</div>
+    </div>
+  </div>
+
+  <!-- Right: Payment Form -->
+  <div class="card payment-card">
+    <h2 class="card-title">Payment Details</h2>
+
+    <!-- Payment Method Tabs -->
+    <div class="pay-tabs">
+      <button class="pay-tab" [class.active]="payMethod==='card'" (click)="payMethod='card'">💳 Card</button>
+      <button class="pay-tab" [class.active]="payMethod==='upi'" (click)="payMethod='upi'">📱 UPI</button>
+      <button class="pay-tab" [class.active]="payMethod==='nb'" (click)="payMethod='nb'">🏦 Net Banking</button>
+    </div>
+
+    <!-- Card Form -->
+    <div class="tab-panel" *ngIf="payMethod==='card'">
+      <!-- Live Card Visual -->
+      <div class="card-visual" [class.flipped]="focusCvv">
+        <div class="card-front">
+          <div class="card-chip">
+            <div class="chip-line"></div>
+            <div class="chip-line"></div>
+          </div>
+          <div class="card-num">{{ cardNumber || '•••• •••• •••• ••••' }}</div>
+          <div class="card-details-row">
+            <div>
+              <div class="card-sub">Card Holder</div>
+              <div class="card-val">{{ cardName || 'YOUR NAME' }}</div>
+            </div>
+            <div>
+              <div class="card-sub">Expires</div>
+              <div class="card-val">{{ cardExpiry || 'MM/YY' }}</div>
+            </div>
+            <div class="card-type">{{ cardType }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Card Number</label>
+        <input type="text" [(ngModel)]="cardNumber" (input)="formatCard($event)" (focus)="focusCvv=false"
+          placeholder="1234 5678 9012 3456" class="form-input" maxlength="19" style="letter-spacing:2px">
+      </div>
+      <div class="input-group">
+        <label>Cardholder Name</label>
+        <input type="text" [(ngModel)]="cardName" (focus)="focusCvv=false"
+          placeholder="Name on card" class="form-input" style="text-transform:uppercase">
+      </div>
+      <div class="row-group">
+        <div class="input-group">
+          <label>Expiry</label>
+          <input type="text" [(ngModel)]="cardExpiry" (input)="formatExpiry($event)" (focus)="focusCvv=false"
+            placeholder="MM/YY" class="form-input" maxlength="5">
+        </div>
+        <div class="input-group">
+          <label>CVV</label>
+          <input type="password" [(ngModel)]="cardCvv" (focus)="focusCvv=true" (blur)="focusCvv=false"
+            placeholder="•••" class="form-input" maxlength="4">
+        </div>
+      </div>
+    </div>
+
+    <!-- UPI Form -->
+    <div class="tab-panel" *ngIf="payMethod==='upi'">
+      <div class="upi-section">
+        <div class="upi-apps">
+          <div class="upi-app">GPay</div>
+          <div class="upi-app">PhonePe</div>
+          <div class="upi-app">Paytm</div>
+          <div class="upi-app">BHIM</div>
+        </div>
+        <div class="input-group">
+          <label>UPI ID</label>
+          <div class="upi-row">
+            <input type="text" [(ngModel)]="upiId" placeholder="yourname@upi" class="form-input">
+            <button class="verify-btn" (click)="verifyUpi()">Verify</button>
+          </div>
+          <p class="upi-verified" *ngIf="upiVerified">✓ UPI ID verified!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Net Banking -->
+    <div class="tab-panel" *ngIf="payMethod==='nb'">
+      <div class="input-group">
+        <label>Select Bank</label>
+        <select [(ngModel)]="selectedBank" class="form-input">
+          <option value="">— Choose your bank —</option>
+          <option>State Bank of India</option>
+          <option>HDFC Bank</option>
+          <option>ICICI Bank</option>
+          <option>Axis Bank</option>
+          <option>Kotak Mahindra Bank</option>
+          <option>Punjab National Bank</option>
+          <option>Bank of Baroda</option>
+          <option>Canara Bank</option>
+          <option>Yes Bank</option>
+          <option>IndusInd Bank</option>
+        </select>
+      </div>
+      <div class="nb-note" *ngIf="selectedBank">
+        You'll be redirected to <strong>{{ selectedBank }}</strong>'s secure portal.
+      </div>
+    </div>
+
+    <p class="error-msg" *ngIf="payError">⚠ {{ payError }}</p>
+
+    <button class="pay-now-btn" (click)="payNow()" [disabled]="paying">
+      <span *ngIf="!paying">🔒 Pay ₹{{ totalAmount }} Now</span>
+      <span *ngIf="paying" class="paying-anim">Processing payment<span class="dots">...</span></span>
+    </button>
+  </div>
+
+</div>

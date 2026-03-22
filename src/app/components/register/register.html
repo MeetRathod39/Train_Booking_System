@@ -1,0 +1,48 @@
+<div class="auth-wrapper fade-in-up">
+
+  <div class="auth-image-panel" style="background-image: url('https://images.unsplash.com/photo-1541427468627-a89a96e5ca1d?q=80&w=2070&auto=format&fit=crop');">
+    <div class="auth-image-overlay">
+      <div class="auth-brand">Rail<span>X</span></div>
+      <h1>Join RailX.</h1>
+      <p>Create your account today and experience the fastest, most secure train booking platform in India.</p>
+      <div class="auth-features">
+        <div class="auth-feat">✓ Free to sign up</div>
+        <div class="auth-feat">✓ Instant booking confirmation</div>
+        <div class="auth-feat">✓ Manage all bookings in one place</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-form-panel">
+    <div class="auth-card">
+      <div class="auth-card-icon">✨</div>
+      <h2>Create Account</h2>
+      <p class="subtitle">Sign up for seamless rail bookings</p>
+
+      <div class="input-group">
+        <label>Full Name</label>
+        <input type="text" [(ngModel)]="name" placeholder="Ravi Kumar" class="form-input">
+      </div>
+
+      <div class="input-group">
+        <label>Email Address</label>
+        <input type="email" [(ngModel)]="email" placeholder="name@example.com" class="form-input">
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" [(ngModel)]="password" placeholder="Create a strong password" class="form-input" (keyup.enter)="register()">
+      </div>
+
+      <p class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</p>
+
+      <button (click)="register()" class="auth-btn">Create Account →</button>
+
+      <div class="auth-footer">
+        Already have an account?
+        <a routerLink="/login" class="auth-link">Sign In</a>
+      </div>
+    </div>
+  </div>
+
+</div>

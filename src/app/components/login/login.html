@@ -1,0 +1,43 @@
+<div class="auth-wrapper fade-in-up">
+
+  <div class="auth-image-panel" style="background-image: url('https://images.unsplash.com/photo-1474487548417-781cb71495f3?q=80&w=2084&auto=format&fit=crop');">
+    <div class="auth-image-overlay">
+      <div class="auth-brand">Rail<span>X</span></div>
+      <h1>Welcome Back.</h1>
+      <p>Sign in to access your upcoming journeys, manage bookings, and explore new destinations across India.</p>
+      <div class="auth-features">
+        <div class="auth-feat">✓ Instant ticket booking</div>
+        <div class="auth-feat">✓ Real-time seat availability</div>
+        <div class="auth-feat">✓ Secure payment gateway</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-form-panel">
+    <div class="auth-card">
+      <div class="auth-card-icon">🚄</div>
+      <h2>Sign In</h2>
+      <p class="subtitle">Enter your credentials to continue</p>
+
+      <div class="input-group">
+        <label>Email Address</label>
+        <input type="text" [(ngModel)]="username" placeholder="name@example.com or 'admin'" class="form-input">
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" [(ngModel)]="password" placeholder="••••••••" class="form-input" (keyup.enter)="login()">
+      </div>
+
+      <p class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</p>
+
+      <button (click)="login()" class="auth-btn">Sign In →</button>
+
+      <div class="auth-footer">
+        New to RailX?
+        <a routerLink="/register" class="auth-link">Create Account</a>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,107 @@
+<div class="page-header" style="background-image: url('https://images.unsplash.com/photo-1510134950-c8ed849f2b80?q=80&w=2070&auto=format&fit=crop');">
+  <div class="header-overlay">
+    <div class="container text-center">
+      <h1 class="fade-in-up">Seat Selection</h1>
+      <p class="fade-in-up delay-100">Secure your spot on Train #{{ trainId }}</p>
+    </div>
+  </div>
+</div>
+
+<div class="container booking-container fade-in-up delay-200">
+
+  <!-- Seat Map -->
+  <div class="seat-map-section">
+    <div class="card">
+      <div class="card-header-row">
+        <h2 class="card-title">Choose Your Seats</h2>
+        <div class="seat-legend">
+          <div class="legend-item"><span class="box available"></span> Available</div>
+          <div class="legend-item"><span class="box selected"></span> Selected</div>
+          <div class="legend-item"><span class="box unavailable"></span> Booked</div>
+        </div>
+      </div>
+
+      <div class="carriage-wrap">
+        <div class="carriage-label">Coach B1 — Economy Class</div>
+        <div class="carriage-grid">
+          <ng-container *ngFor="let seat of seats">
+            <button
+              class="seat-btn"
+              [class.selected]="seat.selected"
+              [class.unavailable]="seat.unavailable"
+              [disabled]="seat.unavailable"
+              (click)="toggleSeat(seat)">
+              {{ seat.seatNumber }}
+            </button>
+          </ng-container>
+        </div>
+        <div class="carriage-aisle-label">← Window &nbsp;&nbsp; Aisle &nbsp;&nbsp; Window →</div>
+      </div>
+
+      <div class="selection-summary" *ngIf="selectedSeats.length > 0">
+        <span class="sel-label">Selected:</span>
+        <span class="sel-seats">{{ selectedSeats.join(', ') }}</span>
+        <span class="sel-count">{{ selectedSeats.length }} seat(s)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Passenger Form -->
+  <div class="passenger-form-section">
+    <div class="card passenger-card sticky-card">
+      <h2 class="card-title">Passenger Details</h2>
+      <p class="card-subtitle">Add details for each selected seat.</p>
+
+      <div class="passenger-form">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" [(ngModel)]="passengerName" placeholder="E.g. Ravi Kumar" class="form-input">
+        </div>
+        <div class="form-row">
+          <div class="form-group half">
+            <label>Age</label>
+            <input type="number" [(ngModel)]="passengerAge" placeholder="25" class="form-input">
+          </div>
+          <div class="form-group half">
+            <label>Gender</label>
+            <select [(ngModel)]="passengerGender" class="form-input">
+              <option value="">Select</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+        <button (click)="addPassenger()" class="btn-primary" style="width:100%"
+          [disabled]="selectedSeats.length === passengers.length">
+          + Add Passenger
+        </button>
+      </div>
+
+      <div class="added-passengers" *ngIf="passengers.length > 0">
+        <h3>Added Passengers ({{ passengers.length }})</h3>
+        <div class="passenger-list">
+          <div class="passenger-item" *ngFor="let p of passengers; let i = index">
+            <div class="p-avatar">{{ p.name.charAt(0) }}</div>
+            <div class="p-info">
+              <strong>{{ p.name }}</strong>
+              <span>{{ p.age }}, {{ p.gender }}</span>
+            </div>
+            <button (click)="removePassenger(i)" class="p-remove">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="error-msg" *ngIf="errorMsg" style="margin-top:1rem">⚠ {{ errorMsg }}</p>
+
+      <button
+        class="btn-proceed"
+        style="width:100%; margin-top:1.5rem"
+        (click)="book()"
+        [disabled]="selectedSeats.length === 0 || selectedSeats.length !== passengers.length">
+        Proceed to Payment →
+      </button>
+    </div>
+  </div>
+
+</div>
